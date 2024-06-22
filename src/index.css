@@ -16,4 +16,9 @@
 body {
     background: var(--darker-blue, #120523);
     min-height: 100vh;
+    color: var(--color-white);
+}
+a {
+    text-decoration: none;
+    color: var(--color-white);
 }

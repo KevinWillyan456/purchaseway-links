@@ -11,3 +11,11 @@
     padding-top: 100px;
     padding-bottom: 40px;
 }
+.container-cards {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+}
