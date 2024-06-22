@@ -20,3 +20,9 @@
     flex-wrap: wrap;
     gap: 40px;
 }
+.container-cards .empty {
+    font-size: 28px;
+    color: var(--color-white);
+    text-align: center;
+    grid-column: 1 / -1;
+}
