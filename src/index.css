@@ -11,12 +11,15 @@
     --darker-blue: #120523;
     --light-blue: #e0daf7;
     --primary-blue: #5015bd;
-    --secondary-blue: #5015bd;
+    --secondary-blue: #027fe9;
 }
 body {
     background: var(--darker-blue, #120523);
     min-height: 100vh;
     color: var(--color-white);
+}
+body::-webkit-scrollbar {
+    display: none;
 }
 a {
     text-decoration: none;

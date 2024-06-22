@@ -1,5 +1,6 @@
 .card {
-    width: 300px;
+    position: relative;
+    min-width: 300px;
     min-height: 200px;
     border-radius: 15px;
     border: 3px solid var(--color-white);
@@ -37,9 +38,27 @@
     margin-top: 20px;
 }
 .card .card-url a {
+    transition: 200ms;
     color: var(--color-white);
     font-size: 16px;
     background: var(--primary-blue);
     padding: 8px 16px;
     border-radius: 5px;
+    outline: none;
+}
+.card .card-url a:hover,
+.card .card-url a:focus {
+    background: var(--secondary-blue);
+}
+.card .card-config {
+    transition: 200ms;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    cursor: pointer;
+    font-size: 24px;
+}
+.card .card-config:hover {
+    color: var(--primary-blue);
 }

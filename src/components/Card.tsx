@@ -1,3 +1,4 @@
+import { FaGear } from 'react-icons/fa6'
 import './Card.css'
 
 interface CardProps {
@@ -17,6 +18,9 @@ function Card({ title, body, url }: CardProps) {
                 <a href={url} target="_blank" rel="noreferrer">
                     Abrir link
                 </a>
+            </div>
+            <div className="card-config">
+                <FaGear />
             </div>
         </article>
     )
