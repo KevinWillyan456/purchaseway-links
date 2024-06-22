@@ -26,3 +26,14 @@
     text-align: center;
     grid-column: 1 / -1;
 }
+.model-create {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background-color: var(--darker-blue);
+    box-shadow: 24px;
+    padding: 40px;
+    border-radius: 16px;
+}

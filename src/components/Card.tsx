@@ -1,13 +1,12 @@
 import { FaGear } from 'react-icons/fa6'
 import './Card.css'
+import CardModel from '../models/CardModel'
 
 interface CardProps {
-    title: string
-    body: string
-    url: string
+    card: CardModel
 }
 
-function Card({ title, body, url }: CardProps) {
+function Card({ card: { title, body, url } }: CardProps) {
     return (
         <article className="card">
             <div className="card-title">{title}</div>

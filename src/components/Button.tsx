@@ -1,16 +1,19 @@
 import { CiCirclePlus } from 'react-icons/ci'
 import './Button.css'
+import { ReactNode } from 'react'
 
 interface ButtonProps {
-    text: string
     icon: 'plus' | 'none'
+    type?: 'button' | 'submit' | 'reset'
+    onClick?: () => void
+    children?: ReactNode
 }
 
-function Button({ text, icon }: ButtonProps) {
+function Button({ icon, type, children, onClick }: ButtonProps) {
     return (
-        <button className="button">
-            {text}
+        <button className="button" onClick={onClick} type={type}>
             {icon === 'plus' ? <CiCirclePlus /> : null}
+            {children}
         </button>
     )
 }
