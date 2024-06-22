@@ -1,0 +1,13 @@
+.main {
+    width: 100%;
+    max-width: calc(1000px + 40px);
+    margin: 0 auto;
+    padding: 0 20px;
+}
+.title {
+    color: var(--color-white);
+    font-size: 40px;
+    text-align: center;
+    padding-top: 100px;
+    padding-bottom: 40px;
+}

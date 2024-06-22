@@ -1,5 +1,7 @@
+import Main from './components/Main'
+
 function App() {
-    return <div>Hello World!!!</div>
+    return <Main />
 }
 
 export default App

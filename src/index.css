@@ -2,4 +2,18 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+:root {
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --dark-blue: #3d0a49;
+    --darker-blue: #120523;
+    --light-blue: #e0daf7;
+    --primary-blue: #5015bd;
+    --secondary-blue: #5015bd;
+}
+body {
+    background: var(--darker-blue, #120523);
+    min-height: 100vh;
 }
