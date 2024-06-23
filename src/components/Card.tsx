@@ -4,9 +4,15 @@ import CardModel from '../models/CardModel'
 
 interface CardProps {
     card: CardModel
+    openContextMenu: (event: React.MouseEvent<HTMLButtonElement>) => void
+    setAnchorId: (id: string) => void
 }
 
-function Card({ card: { title, body, url } }: CardProps) {
+function Card({
+    card: { title, body, url, id },
+    openContextMenu,
+    setAnchorId,
+}: CardProps) {
     return (
         <article className="card">
             <div className="card-title">{title}</div>
@@ -18,9 +24,15 @@ function Card({ card: { title, body, url } }: CardProps) {
                     Abrir link
                 </a>
             </div>
-            <div className="card-config">
+            <button
+                className="card-config"
+                onClick={(e) => {
+                    openContextMenu(e)
+                    setAnchorId(id)
+                }}
+            >
                 <FaGear />
-            </div>
+            </button>
         </article>
     )
 }

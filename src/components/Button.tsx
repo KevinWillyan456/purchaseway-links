@@ -3,7 +3,7 @@ import './Button.css'
 import { ReactNode } from 'react'
 
 interface ButtonProps {
-    icon: 'plus' | 'none'
+    icon?: 'plus' | 'none'
     type?: 'button' | 'submit' | 'reset'
     onClick?: () => void
     children?: ReactNode

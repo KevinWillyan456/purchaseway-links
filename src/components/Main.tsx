@@ -12,6 +12,13 @@ import {
     Typography,
     ThemeProvider,
     createTheme,
+    Menu,
+    MenuItem,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    DialogContentText,
 } from '@mui/material'
 
 const theme = createTheme({
@@ -41,7 +48,11 @@ function Main() {
     const [urlError, setUrlError] = useState('')
 
     const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const handleCloseAddLink = () => setOpen(false)
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const [openDialog, setOpenDialog] = useState(false)
+    const [anchorId, setAnchorId] = useState<string>('')
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -74,7 +85,40 @@ function Main() {
         setUrl('')
         setBody('')
 
+        handleCloseAddLink()
+    }
+
+    const openContextMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget)
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+
+    const handleEdit = () => {
+        console.log('Edit action')
         handleClose()
+    }
+
+    const handleDelete = () => {
+        CardService.delete(anchorId)
+        setCards(CardService.list())
+        setOpenDialog(false)
+        handleClose()
+    }
+
+    const handleCloseMenu = () => {
+        setAnchorEl(null)
+    }
+
+    const handleOpenDialog = () => {
+        setOpenDialog(true)
+        handleCloseMenu()
+    }
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false)
     }
 
     return (
@@ -90,12 +134,17 @@ function Main() {
                 )}
 
                 {cards.map((data) => (
-                    <Card card={data} key={data.id} />
+                    <Card
+                        card={data}
+                        key={data.id}
+                        openContextMenu={openContextMenu}
+                        setAnchorId={setAnchorId}
+                    />
                 ))}
             </section>
 
             <ThemeProvider theme={theme}>
-                <Modal open={open} onClose={handleClose}>
+                <Modal open={open} onClose={handleCloseAddLink}>
                     <Box className="model-create">
                         <Typography variant="h6" component="h2">
                             Adicionar link
@@ -146,13 +195,10 @@ function Main() {
                                 display="flex"
                                 justifyContent="space-between"
                             >
-                                <Button icon="none" type="submit">
-                                    Salvar
-                                </Button>
+                                <Button type="submit">Salvar</Button>
                                 <Button
-                                    icon="none"
                                     type="button"
-                                    onClick={handleClose}
+                                    onClick={handleCloseAddLink}
                                 >
                                     Cancelar
                                 </Button>
@@ -160,6 +206,43 @@ function Main() {
                         </form>
                     </Box>
                 </Modal>
+
+                <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                >
+                    <MenuItem onClick={handleEdit}>Editar</MenuItem>
+                    <MenuItem onClick={handleOpenDialog}>Deletar</MenuItem>
+                </Menu>
+
+                <Dialog
+                    open={openDialog}
+                    onClose={handleCloseDialog}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        Confirmar deleção
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            Deseja mesmo deletar este link?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCloseDialog}>Cancelar</Button>
+                        <Button onClick={handleDelete}>Deletar</Button>
+                    </DialogActions>
+                </Dialog>
             </ThemeProvider>
         </section>
     )
