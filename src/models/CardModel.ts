@@ -3,7 +3,8 @@ interface CardModel {
     title: string
     body: string
     url: string
-    createdAt: string
+    createdAt: Date
+    updatedAt: Date
 }
 
 export default CardModel

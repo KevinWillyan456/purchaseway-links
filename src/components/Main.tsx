@@ -108,11 +108,12 @@ function Main() {
         }
 
         CardService.create({
-            id: Math.random().toString(36).substr(2, 9),
+            id: Math.floor(Math.random() * Date.now()).toString(36),
             title,
             url,
             body,
-            createdAt: new Date().toISOString(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
         })
 
         setCards(CardService.list())
@@ -126,6 +127,23 @@ function Main() {
 
     const handleEditLink = (e: React.FormEvent) => {
         e.preventDefault()
+
+        if (!anchorId) return
+
+        const card = CardService.find(anchorId)
+
+        if (
+            card?.title === titleEdit &&
+            card?.url === urlEdit &&
+            card?.body === bodyEdit
+        ) {
+            setTitleEdit('')
+            setUrlEdit('')
+            setBodyEdit('')
+
+            handleCloseEditLink()
+            return
+        }
 
         if (!titleEdit) {
             setTitleErrorEditLink('Campo obrigatório')
@@ -175,7 +193,8 @@ function Main() {
             title: titleEdit,
             url: urlEdit,
             body: bodyEdit,
-            createdAt: new Date().toISOString(),
+            createdAt: card?.createdAt || new Date(),
+            updatedAt: new Date(),
         })
 
         setCards(CardService.list())
