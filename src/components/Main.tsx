@@ -71,6 +71,27 @@ function Main() {
             setUrlError('')
         }
 
+        if (!url.match(/^(http|https):\/\//)) {
+            setUrlError('URL inválida')
+            return
+        } else {
+            setUrlError('')
+        }
+
+        if (CardService.list().find((c) => c.title === title)) {
+            setTitleError('Título já existente')
+            return
+        } else {
+            setTitleError('')
+        }
+
+        if (CardService.list().find((c) => c.url === url)) {
+            setUrlError('URL já existente')
+            return
+        } else {
+            setUrlError('')
+        }
+
         CardService.create({
             id: Math.random().toString(36).substr(2, 9),
             title,

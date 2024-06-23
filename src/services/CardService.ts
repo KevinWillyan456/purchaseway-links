@@ -15,7 +15,15 @@ class CardService {
         const cards = this.list()
 
         if (cards.find((c) => c.id === card.id)) {
-            throw new Error('Card already exists')
+            throw new Error('Card id already exists')
+        }
+
+        if (cards.find((c) => c.title === card.title)) {
+            throw new Error('Card title already exists')
+        }
+
+        if (cards.find((c) => c.url === card.url)) {
+            throw new Error('Card url already exists')
         }
 
         cards.push(card)
