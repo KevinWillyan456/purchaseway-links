@@ -40,56 +40,71 @@ const theme = createTheme({
 function Main() {
     const [cards, setCards] = useState<CardModel[]>(CardService.list())
 
-    const [open, setOpen] = useState(false)
-    const [title, setTitle] = useState('')
-    const [url, setUrl] = useState('')
-    const [body, setBody] = useState('')
-    const [titleError, setTitleError] = useState('')
-    const [urlError, setUrlError] = useState('')
+    const [openAddLink, setOpenAddLink] = useState<boolean>(false)
+    const [openEditLink, setOpenEditLink] = useState<boolean>(false)
+    const [title, setTitle] = useState<string>('')
+    const [url, setUrl] = useState<string>('')
+    const [body, setBody] = useState<string>('')
+    const [titleEdit, setTitleEdit] = useState<string>('')
+    const [urlEdit, setUrlEdit] = useState<string>('')
+    const [bodyEdit, setBodyEdit] = useState<string>('')
+    const [titleErrorAddLink, setTitleErrorAddLink] = useState<string>('')
+    const [urlErrorAddLink, setUrlErrorAddLink] = useState<string>('')
+    const [titleErrorEditLink, setTitleErrorEditLink] = useState<string>('')
+    const [urlErrorEditLink, setUrlErrorEditLink] = useState<string>('')
 
-    const handleOpen = () => setOpen(true)
-    const handleCloseAddLink = () => setOpen(false)
+    const handleOpenAddLink = () => setOpenAddLink(true)
+    const handleCloseAddLink = () => setOpenAddLink(false)
+
+    const handleOpenEditLink = () => {
+        const card = CardService.find(anchorId)
+        setTitleEdit(card?.title || '')
+        setUrlEdit(card?.url || '')
+        setBodyEdit(card?.body || '')
+        setOpenEditLink(true)
+    }
+    const handleCloseEditLink = () => setOpenEditLink(false)
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const [openDialog, setOpenDialog] = useState(false)
+    const [openDialog, setOpenDialog] = useState<boolean>(false)
     const [anchorId, setAnchorId] = useState<string>('')
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleAddLink = (e: React.FormEvent) => {
         e.preventDefault()
 
         if (!title) {
-            setTitleError('Campo obrigatório')
+            setTitleErrorAddLink('Campo obrigatório')
             return
         } else {
-            setTitleError('')
+            setTitleErrorAddLink('')
         }
 
         if (!url) {
-            setUrlError('Campo obrigatório')
+            setUrlErrorAddLink('Campo obrigatório')
             return
         } else {
-            setUrlError('')
+            setUrlErrorAddLink('')
         }
 
         if (!url.match(/^(http|https):\/\//)) {
-            setUrlError('URL inválida')
+            setUrlErrorAddLink('URL inválida')
             return
         } else {
-            setUrlError('')
+            setUrlErrorAddLink('')
         }
 
         if (CardService.list().find((c) => c.title === title)) {
-            setTitleError('Título já existente')
+            setTitleErrorAddLink('Título já existente')
             return
         } else {
-            setTitleError('')
+            setTitleErrorAddLink('')
         }
 
         if (CardService.list().find((c) => c.url === url)) {
-            setUrlError('URL já existente')
+            setUrlErrorAddLink('URL já existente')
             return
         } else {
-            setUrlError('')
+            setUrlErrorAddLink('')
         }
 
         CardService.create({
@@ -109,24 +124,82 @@ function Main() {
         handleCloseAddLink()
     }
 
+    const handleEditLink = (e: React.FormEvent) => {
+        e.preventDefault()
+
+        if (!titleEdit) {
+            setTitleErrorEditLink('Campo obrigatório')
+            return
+        } else {
+            setTitleErrorEditLink('')
+        }
+
+        if (!urlEdit) {
+            setUrlErrorEditLink('Campo obrigatório')
+            return
+        } else {
+            setUrlErrorEditLink('')
+        }
+
+        if (!urlEdit.match(/^(http|https):\/\//)) {
+            setUrlErrorEditLink('URL inválida')
+            return
+        } else {
+            setUrlErrorEditLink('')
+        }
+
+        if (
+            CardService.list().find(
+                (c) => c.title === titleEdit && c.id !== anchorId
+            )
+        ) {
+            setTitleErrorEditLink('Título já existente')
+            return
+        } else {
+            setTitleErrorEditLink('')
+        }
+
+        if (
+            CardService.list().find(
+                (c) => c.url === urlEdit && c.id !== anchorId
+            )
+        ) {
+            setUrlErrorEditLink('URL já existente')
+            return
+        } else {
+            setUrlErrorEditLink('')
+        }
+
+        CardService.update({
+            id: anchorId,
+            title: titleEdit,
+            url: urlEdit,
+            body: bodyEdit,
+            createdAt: new Date().toISOString(),
+        })
+
+        setCards(CardService.list())
+
+        setTitleEdit('')
+        setUrlEdit('')
+        setBodyEdit('')
+
+        handleCloseEditLink()
+    }
+
+    const handleDeleteLink = () => {
+        CardService.delete(anchorId)
+        setCards(CardService.list())
+        setOpenDialog(false)
+        handleClose()
+    }
+
     const openContextMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget)
     }
 
     const handleClose = () => {
         setAnchorEl(null)
-    }
-
-    const handleEdit = () => {
-        console.log('Edit action')
-        handleClose()
-    }
-
-    const handleDelete = () => {
-        CardService.delete(anchorId)
-        setCards(CardService.list())
-        setOpenDialog(false)
-        handleClose()
     }
 
     const handleCloseMenu = () => {
@@ -145,7 +218,7 @@ function Main() {
     return (
         <section className="main">
             <div className="title">Purchaseway Links</div>
-            <Button icon="plus" onClick={handleOpen}>
+            <Button icon="plus" onClick={handleOpenAddLink}>
                 Novo
             </Button>
 
@@ -165,12 +238,12 @@ function Main() {
             </section>
 
             <ThemeProvider theme={theme}>
-                <Modal open={open} onClose={handleCloseAddLink}>
+                <Modal open={openAddLink} onClose={handleCloseAddLink}>
                     <Box className="model-create">
                         <Typography variant="h6" component="h2">
                             Adicionar link
                         </Typography>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleAddLink}>
                             <TextField
                                 fullWidth
                                 margin="normal"
@@ -182,8 +255,8 @@ function Main() {
                                 InputProps={{
                                     style: { backgroundColor: 'white' },
                                 }}
-                                error={!!titleError}
-                                helperText={titleError}
+                                error={!!titleErrorAddLink}
+                                helperText={titleErrorAddLink}
                             />
                             <TextField
                                 fullWidth
@@ -195,8 +268,8 @@ function Main() {
                                 InputProps={{
                                     style: { backgroundColor: 'white' },
                                 }}
-                                error={!!urlError}
-                                helperText={urlError}
+                                error={!!urlErrorAddLink}
+                                helperText={urlErrorAddLink}
                             />
                             <TextField
                                 fullWidth
@@ -228,6 +301,69 @@ function Main() {
                     </Box>
                 </Modal>
 
+                <Modal open={openEditLink} onClose={handleCloseEditLink}>
+                    <Box className="model-create">
+                        <Typography variant="h6" component="h2">
+                            Editar link
+                        </Typography>
+                        <form onSubmit={handleEditLink}>
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                label="Título"
+                                value={titleEdit}
+                                className="model-create-input"
+                                onChange={(e) => setTitleEdit(e.target.value)}
+                                variant="filled"
+                                InputProps={{
+                                    style: { backgroundColor: 'white' },
+                                }}
+                                error={!!titleErrorEditLink}
+                                helperText={titleErrorEditLink}
+                            />
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                label="URL"
+                                value={urlEdit}
+                                onChange={(e) => setUrlEdit(e.target.value)}
+                                variant="filled"
+                                InputProps={{
+                                    style: { backgroundColor: 'white' },
+                                }}
+                                error={!!urlErrorEditLink}
+                                helperText={urlErrorEditLink}
+                            />
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                label="Descrição"
+                                multiline
+                                rows={4}
+                                value={bodyEdit}
+                                onChange={(e) => setBodyEdit(e.target.value)}
+                                variant="filled"
+                                InputProps={{
+                                    style: { backgroundColor: 'white' },
+                                }}
+                            />
+                            <Box
+                                mt={2}
+                                display="flex"
+                                justifyContent="space-between"
+                            >
+                                <Button type="submit">Salvar</Button>
+                                <Button
+                                    type="button"
+                                    onClick={handleCloseEditLink}
+                                >
+                                    Cancelar
+                                </Button>
+                            </Box>
+                        </form>
+                    </Box>
+                </Modal>
+
                 <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
@@ -247,7 +383,7 @@ function Main() {
                     }}
                 >
                     <MenuItem
-                        onClick={handleEdit}
+                        onClick={handleOpenEditLink}
                         style={{ color: 'var(--secondary-blue)' }}
                     >
                         Editar
@@ -286,7 +422,7 @@ function Main() {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleCloseDialog}>Cancelar</Button>
-                        <Button onClick={handleDelete}>Deletar</Button>
+                        <Button onClick={handleDeleteLink}>Deletar</Button>
                     </DialogActions>
                 </Dialog>
             </ThemeProvider>
