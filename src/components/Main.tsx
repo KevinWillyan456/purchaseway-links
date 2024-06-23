@@ -20,6 +20,7 @@ import {
     DialogActions,
     DialogContentText,
 } from '@mui/material'
+import Search from './Search'
 
 const theme = createTheme({
     components: {
@@ -234,29 +235,59 @@ function Main() {
         setOpenDialog(false)
     }
 
+    const [searchText, setSearchText] = useState<string>('')
+
+    const handleFilterChange = (text: string) => {
+        setSearchText(text)
+    }
+
+    const searchedCards = cards.filter(
+        (card) =>
+            card.title.toLowerCase().includes(searchText.toLowerCase()) ||
+            card.body.toLowerCase().includes(searchText.toLowerCase()) ||
+            card.url.toLowerCase().includes(searchText.toLowerCase())
+    )
+
     return (
-        <section className="main">
-            <div className="title">Purchaseway Links</div>
-            <Button icon="plus" onClick={handleOpenAddLink}>
-                Novo
-            </Button>
+        <ThemeProvider theme={theme}>
+            <section className="main">
+                <div className="title">Purchaseway Links</div>
+                <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={2}
+                    gap={2}
+                >
+                    <Button icon="plus" onClick={handleOpenAddLink}>
+                        Novo
+                    </Button>
 
-            <section className="container-cards">
-                {cards.length === 0 && (
-                    <div className="empty">Nenhum link cadastrado</div>
-                )}
-
-                {cards.map((data) => (
-                    <Card
-                        card={data}
-                        key={data.id}
-                        openContextMenu={openContextMenu}
-                        setAnchorId={setAnchorId}
+                    <Search
+                        searchText={searchText}
+                        onFilterChange={handleFilterChange}
                     />
-                ))}
-            </section>
+                </Box>
 
-            <ThemeProvider theme={theme}>
+                <section className="container-cards">
+                    {cards.length === 0 && (
+                        <div className="empty">Nenhum link cadastrado</div>
+                    )}
+
+                    {searchedCards.length === 0 && (
+                        <div className="empty">Nenhum link encontrado</div>
+                    )}
+
+                    {searchedCards.map((data) => (
+                        <Card
+                            card={data}
+                            key={data.id}
+                            openContextMenu={openContextMenu}
+                            setAnchorId={setAnchorId}
+                        />
+                    ))}
+                </section>
+
                 <Modal open={openAddLink} onClose={handleCloseAddLink}>
                     <Box className="model-create">
                         <Typography variant="h6" component="h2">
@@ -444,8 +475,8 @@ function Main() {
                         <Button onClick={handleDeleteLink}>Deletar</Button>
                     </DialogActions>
                 </Dialog>
-            </ThemeProvider>
-        </section>
+            </section>
+        </ThemeProvider>
     )
 }
 
