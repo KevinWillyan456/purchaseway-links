@@ -14,7 +14,7 @@
     --secondary-blue: #027fe9;
 }
 body {
-    background: var(--darker-blue, #120523);
+    background: var(--darker-blue);
     min-height: 100vh;
     color: var(--color-white);
 }

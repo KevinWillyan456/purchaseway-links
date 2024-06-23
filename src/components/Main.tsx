@@ -240,22 +240,47 @@ function Main() {
                         vertical: 'top',
                         horizontal: 'left',
                     }}
+                    sx={{
+                        '& .MuiPaper-root': {
+                            backgroundColor: 'var(--darker-blue)',
+                        },
+                    }}
                 >
-                    <MenuItem onClick={handleEdit}>Editar</MenuItem>
-                    <MenuItem onClick={handleOpenDialog}>Deletar</MenuItem>
+                    <MenuItem
+                        onClick={handleEdit}
+                        style={{ color: 'var(--secondary-blue)' }}
+                    >
+                        Editar
+                    </MenuItem>
+                    <MenuItem
+                        onClick={handleOpenDialog}
+                        style={{ color: '#e90215' }}
+                    >
+                        Deletar
+                    </MenuItem>
                 </Menu>
 
                 <Dialog
                     open={openDialog}
+                    fullWidth
                     onClose={handleCloseDialog}
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
+                    sx={{
+                        '& .MuiPaper-root': {
+                            backgroundColor: 'var(--darker-blue)',
+                            color: 'var(--color-white)',
+                        },
+                    }}
                 >
                     <DialogTitle id="alert-dialog-title">
                         Confirmar deleção
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
+                        <DialogContentText
+                            id="alert-dialog-description"
+                            sx={{ color: 'var(--color-white)' }}
+                        >
                             Deseja mesmo deletar este link?
                         </DialogContentText>
                     </DialogContent>
