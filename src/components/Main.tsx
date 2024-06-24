@@ -19,8 +19,13 @@ import {
     DialogContent,
     DialogActions,
     DialogContentText,
+    FormControl,
+    InputLabel,
+    Select,
+    SelectChangeEvent,
 } from '@mui/material'
 import Search from './Search'
+import TypesOrderBy from '../models/TypesOrderBy'
 
 const theme = createTheme({
     components: {
@@ -35,11 +40,20 @@ const theme = createTheme({
                 },
             },
         },
+        MuiFormControl: {
+            styleOverrides: {
+                root: {
+                    minWidth: 120,
+                    backgroundColor: 'var(--color-white)',
+                    borderRadius: '5px',
+                },
+            },
+        },
     },
 })
 
 function Main() {
-    const [cards, setCards] = useState<CardModel[]>(CardService.list())
+    const [cards, setCards] = useState<CardModel[]>(CardService.list('asc'))
 
     const [openAddLink, setOpenAddLink] = useState<boolean>(false)
     const [openEditLink, setOpenEditLink] = useState<boolean>(false)
@@ -94,14 +108,14 @@ function Main() {
             setUrlErrorAddLink('')
         }
 
-        if (CardService.list().find((c) => c.title === title)) {
+        if (CardService.list('asc').find((c) => c.title === title)) {
             setTitleErrorAddLink('Título já existente')
             return
         } else {
             setTitleErrorAddLink('')
         }
 
-        if (CardService.list().find((c) => c.url === url)) {
+        if (CardService.list('asc').find((c) => c.url === url)) {
             setUrlErrorAddLink('URL já existente')
             return
         } else {
@@ -117,7 +131,7 @@ function Main() {
             updatedAt: new Date(),
         })
 
-        setCards(CardService.list())
+        setCards(CardService.list(filter))
 
         setTitle('')
         setUrl('')
@@ -198,7 +212,7 @@ function Main() {
             updatedAt: new Date(),
         })
 
-        setCards(CardService.list())
+        setCards(CardService.list(filter))
 
         setTitleEdit('')
         setUrlEdit('')
@@ -209,7 +223,7 @@ function Main() {
 
     const handleDeleteLink = () => {
         CardService.delete(anchorId)
-        setCards(CardService.list())
+        setCards(CardService.list(filter))
         setOpenDialog(false)
         handleClose()
     }
@@ -237,7 +251,7 @@ function Main() {
 
     const [searchText, setSearchText] = useState<string>('')
 
-    const handleFilterChange = (text: string) => {
+    const handleSearchChange = (text: string) => {
         setSearchText(text)
     }
 
@@ -248,6 +262,28 @@ function Main() {
             card.url.toLowerCase().includes(searchText.toLowerCase())
     )
 
+    const [filter, setFilter] = useState<TypesOrderBy>('asc')
+
+    const handleChangeFilter = (event: SelectChangeEvent) => {
+        const value = event.target.value as TypesOrderBy
+
+        setFilter(value)
+
+        if (value === 'asc') {
+            setCards(CardService.list('asc'))
+        }
+
+        if (value === 'desc') {
+            setCards(CardService.list('desc'))
+        }
+
+        if (value === 'date') {
+            setCards(CardService.list('date'))
+        }
+
+        setSearchText('')
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <section className="main">
@@ -255,6 +291,7 @@ function Main() {
                 <Box
                     display="flex"
                     justifyContent="space-between"
+                    flexWrap={'wrap' as const}
                     alignItems="center"
                     mb={2}
                     gap={2}
@@ -263,9 +300,24 @@ function Main() {
                         Novo
                     </Button>
 
+                    <FormControl variant="filled">
+                        <InputLabel id="filter-label">Filtros</InputLabel>
+                        <Select
+                            labelId="filter-label"
+                            id="filter-select"
+                            value={filter}
+                            label="Filtros"
+                            onChange={handleChangeFilter}
+                        >
+                            <MenuItem value={'asc'}>A-Z</MenuItem>
+                            <MenuItem value={'desc'}>Z-A</MenuItem>
+                            <MenuItem value={'date'}>Data</MenuItem>
+                        </Select>
+                    </FormControl>
+
                     <Search
                         searchText={searchText}
-                        onFilterChange={handleFilterChange}
+                        onSearchChange={handleSearchChange}
                     />
                 </Box>
 
@@ -274,7 +326,7 @@ function Main() {
                         <div className="empty">Nenhum link cadastrado</div>
                     )}
 
-                    {searchedCards.length === 0 && (
+                    {searchedCards.length === 0 && cards.length > 0 && (
                         <div className="empty">Nenhum link encontrado</div>
                     )}
 

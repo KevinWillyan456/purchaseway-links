@@ -25,6 +25,7 @@
     color: var(--color-white);
     text-align: center;
     grid-column: 1 / -1;
+    margin-top: 20px;
 }
 .model-create {
     position: absolute;

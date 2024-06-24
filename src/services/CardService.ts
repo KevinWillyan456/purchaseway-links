@@ -1,9 +1,14 @@
 import CardModel from '../models/CardModel'
-
-type TypesOrderBy = 'asc' | 'desc' | 'date' | undefined
+import TypesOrderBy from '../models/TypesOrderBy'
 
 class CardService {
     public static list(orderBy: TypesOrderBy = 'asc'): CardModel[] {
+        if (!['asc', 'desc', 'date'].includes(orderBy)) {
+            throw new Error(
+                'Invalid orderBy value provided to CardService.list() method call. Valid values are: asc, desc, date. If you want to list all cards, just call the method without any arguments.'
+            )
+        }
+
         const cards = localStorage.getItem('cards')
 
         if (orderBy === 'asc') {

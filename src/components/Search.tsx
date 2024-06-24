@@ -2,20 +2,15 @@ import { TextField } from '@mui/material'
 
 interface SearchProps {
     searchText: string
-    onFilterChange: (text: string) => void
+    onSearchChange: (text: string) => void
 }
 
-function Search({ searchText, onFilterChange }: SearchProps) {
+function Search({ searchText, onSearchChange }: SearchProps) {
     return (
         <TextField
-            sx={{
-                '& .MuiInputBase-input': {
-                    height: '18px',
-                },
-            }}
             label="Pesquisar"
             value={searchText}
-            onChange={(e) => onFilterChange(e.target.value)}
+            onChange={(e) => onSearchChange(e.target.value)}
             variant="filled"
             fullWidth
         />
