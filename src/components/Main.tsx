@@ -23,6 +23,7 @@ import {
     InputLabel,
     Select,
     SelectChangeEvent,
+    Badge,
 } from '@mui/material'
 import Search from './Search'
 import TypesOrderBy from '../models/TypesOrderBy'
@@ -46,6 +47,14 @@ const theme = createTheme({
                     minWidth: 120,
                     backgroundColor: 'var(--color-white)',
                     borderRadius: '5px',
+                },
+            },
+        },
+        MuiBadge: {
+            styleOverrides: {
+                badge: {
+                    backgroundColor: 'var(--primary-blue)',
+                    color: 'var(--color-white)',
                 },
             },
         },
@@ -296,9 +305,11 @@ function Main() {
                     mb={2}
                     gap={2}
                 >
-                    <Button icon="plus" onClick={handleOpenAddLink}>
-                        Novo
-                    </Button>
+                    <Badge badgeContent={cards.length}>
+                        <Button icon="plus" onClick={handleOpenAddLink}>
+                            Novo
+                        </Button>
+                    </Badge>
 
                     <FormControl variant="filled">
                         <InputLabel id="filter-label">Filtros</InputLabel>
