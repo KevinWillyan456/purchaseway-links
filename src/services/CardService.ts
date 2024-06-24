@@ -1,4 +1,5 @@
 import CardModel from '../models/CardModel'
+import TypesLayoutMode from '../models/LayoutMode'
 import TypesOrderBy from '../models/TypesOrderBy'
 
 class CardService {
@@ -80,6 +81,20 @@ class CardService {
 
     public static deleteAll(): void {
         localStorage.removeItem('cards')
+    }
+
+    public static getlayoutMode(): TypesLayoutMode {
+        return (localStorage.getItem('layoutMode') as TypesLayoutMode) || 'list'
+    }
+
+    public static setLayoutMode(mode: TypesLayoutMode): void {
+        if (!['list', 'grid'].includes(mode)) {
+            throw new Error(
+                'Invalid layout mode value provided to CardService.setLayoutMode() method call. Valid values are: list, grid.'
+            )
+        }
+
+        localStorage.setItem('layoutMode', mode)
     }
 }
 

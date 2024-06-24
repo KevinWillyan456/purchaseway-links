@@ -24,9 +24,14 @@ import {
     Select,
     SelectChangeEvent,
     Badge,
+    ToggleButtonGroup,
+    ToggleButton,
 } from '@mui/material'
 import Search from './Search'
 import TypesOrderBy from '../models/TypesOrderBy'
+import { FaListUl } from 'react-icons/fa'
+import { IoGrid } from 'react-icons/io5'
+import TypesLayoutMode from '../models/LayoutMode'
 
 const theme = createTheme({
     components: {
@@ -55,6 +60,27 @@ const theme = createTheme({
                 badge: {
                     backgroundColor: 'var(--primary-blue)',
                     color: 'var(--color-white)',
+                },
+            },
+        },
+        MuiToggleButton: {
+            styleOverrides: {
+                root: {
+                    transition: '200ms',
+                    backgroundColor: 'var(--color-white)',
+                    color: 'var(--darker-blue)',
+                    '&.Mui-selected': {
+                        backgroundColor: 'var(--primary-blue)',
+                        color: 'var(--color-white)',
+                    },
+                    '&.Mui-selected:hover': {
+                        backgroundColor: 'var(--primary-blue)',
+                        color: 'var(--color-white)',
+                    },
+                    '&:hover': {
+                        backgroundColor: 'var(--primary-blue)',
+                        color: 'var(--color-white)',
+                    },
                 },
             },
         },
@@ -293,6 +319,20 @@ function Main() {
         setSearchText('')
     }
 
+    const [alignment, setAlignment] = useState<TypesLayoutMode>(
+        CardService.getlayoutMode()
+    )
+
+    const handleAlignment = (
+        _event: React.MouseEvent<HTMLElement>,
+        newAlignment: TypesLayoutMode | null
+    ) => {
+        if (newAlignment !== null) {
+            setAlignment(newAlignment)
+            CardService.setLayoutMode(newAlignment)
+        }
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <section className="main">
@@ -311,20 +351,40 @@ function Main() {
                         </Button>
                     </Badge>
 
-                    <FormControl variant="filled">
-                        <InputLabel id="filter-label">Filtros</InputLabel>
-                        <Select
-                            labelId="filter-label"
-                            id="filter-select"
-                            value={filter}
-                            label="Filtros"
-                            onChange={handleChangeFilter}
+                    <Box display="flex" alignItems="center" gap={2}>
+                        <ToggleButtonGroup
+                            value={alignment}
+                            exclusive
+                            onChange={handleAlignment}
+                            aria-label="text alignment"
                         >
-                            <MenuItem value={'asc'}>A-Z</MenuItem>
-                            <MenuItem value={'desc'}>Z-A</MenuItem>
-                            <MenuItem value={'date'}>Data</MenuItem>
-                        </Select>
-                    </FormControl>
+                            <ToggleButton
+                                value="list"
+                                aria-label="left aligned"
+                            >
+                                <FaListUl />
+                            </ToggleButton>
+
+                            <ToggleButton value="grid" aria-label="centered">
+                                <IoGrid />
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+
+                        <FormControl variant="filled">
+                            <InputLabel id="filter-label">Filtros</InputLabel>
+                            <Select
+                                labelId="filter-label"
+                                id="filter-select"
+                                value={filter}
+                                label="Filtros"
+                                onChange={handleChangeFilter}
+                            >
+                                <MenuItem value={'asc'}>A-Z</MenuItem>
+                                <MenuItem value={'desc'}>Z-A</MenuItem>
+                                <MenuItem value={'date'}>Data</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
 
                     <Search
                         searchText={searchText}
@@ -332,7 +392,23 @@ function Main() {
                     />
                 </Box>
 
-                <section className="container-cards">
+                <section
+                    className="container-cards"
+                    style={
+                        alignment === 'grid'
+                            ? {
+                                  display: 'grid',
+                                  gridTemplateColumns:
+                                      'repeat(auto-fill, minmax(300px, 1fr))',
+                                  gap: '40px',
+                              }
+                            : {
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '30px',
+                              }
+                    }
+                >
                     {cards.length === 0 && (
                         <div className="empty">Nenhum link cadastrado</div>
                     )}
