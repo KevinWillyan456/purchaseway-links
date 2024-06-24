@@ -1,8 +1,37 @@
 import CardModel from '../models/CardModel'
 
+type TypesOrderBy = 'asc' | 'desc' | 'date' | undefined
+
 class CardService {
-    public static list(): CardModel[] {
+    public static list(orderBy: TypesOrderBy = 'asc'): CardModel[] {
         const cards = localStorage.getItem('cards')
+
+        if (orderBy === 'asc') {
+            return cards
+                ? JSON.parse(cards).sort((a: CardModel, b: CardModel) =>
+                      a.title.localeCompare(b.title)
+                  )
+                : []
+        }
+
+        if (orderBy === 'desc') {
+            return cards
+                ? JSON.parse(cards).sort((a: CardModel, b: CardModel) =>
+                      b.title.localeCompare(a.title)
+                  )
+                : []
+        }
+
+        if (orderBy === 'date') {
+            return cards
+                ? JSON.parse(cards).sort(
+                      (a: CardModel, b: CardModel) =>
+                          new Date(b.createdAt).getTime() -
+                          new Date(a.createdAt).getTime()
+                  )
+                : []
+        }
+
         return cards ? JSON.parse(cards) : []
     }
 
