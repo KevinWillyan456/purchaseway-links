@@ -1,6 +1,6 @@
 import { FaGear } from 'react-icons/fa6'
+import CardModel from '../../models/CardModel'
 import './Card.css'
-import CardModel from '../models/CardModel'
 
 interface CardProps {
     card: CardModel
