@@ -160,7 +160,7 @@ function Main() {
         CardService.create({
             id: Math.floor(Math.random() * Date.now()).toString(36),
             title,
-            url,
+            url: url.trim(),
             body,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -241,7 +241,7 @@ function Main() {
         CardService.update({
             id: anchorId,
             title: titleEdit,
-            url: urlEdit,
+            url: urlEdit.trim(),
             body: bodyEdit,
             createdAt: card?.createdAt || new Date(),
             updatedAt: new Date(),

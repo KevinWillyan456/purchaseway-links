@@ -1,7 +1,7 @@
 .button {
     transition: 200ms;
     border-radius: 15px;
-    background: var(--dark-blue);
+    background-color: var(--dark-blue);
     color: var(--color-white);
     font-size: 28px;
     border: none;
@@ -11,7 +11,14 @@
     justify-content: center;
     gap: 10px;
     cursor: pointer;
-}
-.button:hover {
-    background: var(--primary-blue);
+    outline: none;
+
+    &:hover,
+    &:focus {
+        background-color: var(--primary-blue);
+    }
+
+    @media (max-width: 768px) {
+        font-size: 24px;
+    }
 }
